@@ -5,7 +5,7 @@ import numpy as np
 import cv2
 from tqdm import tqdm
 
-PicToExtract = 15
+PicToExtract = 16
 
 parser = argparse.ArgumentParser()
 parser.add_argument("input_file", help="path to the input video file")
@@ -33,16 +33,19 @@ print(total_frames)
 split_frames = int(total_frames/PicToExtract)
 print(split_frames)
 
-for i in tqdm(range(total_frames)):
+for i in range(PicToExtract):
     # Lese das nächste Frame
     ret, frame = cap.read()    
     # Beende die Schleife, wenn das Video zu Ende ist
     if not ret:
         break    
-    if i % split_frames == 0:            #modulos every x frames
-        if frame_height != 1080:
-            frame = cv2.resize(frame, (1920, 1080),interpolation=cv2.INTER_AREA)
+   # if i % split_frames == 0:            #modulos every x frames
+    if frame_height != 1080:
+        frame = cv2.resize(frame, (1920, 1080),interpolation=cv2.INTER_AREA)
   
-        cv2.imwrite((str(i) + output_video_path), frame)
-        print('saved')   
+    cv2.imwrite((str(i) + output_video_path), frame)
+    print('saved')
+        
+    current_frames = cap.get(cv2.CAP_PROP_POS_FRAMES)
+    cap.set(cv2.CAP_PROP_POS_FRAMES, current_frames+split_frames-1)    
      
