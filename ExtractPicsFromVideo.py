@@ -11,6 +11,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("input_file", help="path to the input video file")
 args = parser.parse_args()   
 
+output_video_path = "_" + args.input_file.split("/")[-1].split(".")[0] + "_" + ".jpg"
+
 # Öffne das Eingabe-Video
 cap = cv2.VideoCapture(args.input_file)
 print(args.input_file)
@@ -38,6 +40,9 @@ for i in tqdm(range(total_frames)):
     if not ret:
         break    
     if i % split_frames == 0:            #modulos every x frames
-        cv2.imwrite((str(i)+"test.jpg"), frame)
-        #print('saved')   
+        if frame_height != 1080:
+            frame = cv2.resize(frame, (1920, 1080),interpolation=cv2.INTER_AREA)
+  
+        cv2.imwrite((str(i) + output_video_path), frame)
+        print('saved')   
      
